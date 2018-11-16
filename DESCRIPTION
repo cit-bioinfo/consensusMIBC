@@ -1,0 +1,12 @@
+Package: consensusMIBC
+Title:  Transcriptomic predictor of muscle-invasive bladder cancer consensus subtypes
+Version: 1.0
+Authors@R: person("Aurelie", "Kamoun", email = "aurelie.kamoun@ligue-cancer.net", role = c("aut", "cre"))
+Description: Transcriptomic predictor of muscle-invasive bladder cancer consensus subtypes. 
+    It implements a nearest-centroid single-sample transcriptomic classifier based 
+    on Pearson's correlation between each sample transcriptomic profile and 
+    centroid transcriptomic profiles from the six muscle-invasive bladder 
+    cancer consensus subtypes described in Kamoun et al (to be published).
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
