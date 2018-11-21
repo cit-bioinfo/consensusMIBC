@@ -1,7 +1,7 @@
 # Rd
 # description >> Nearest-centroid single sample classifier according to the consensus molecular subtypes of muscle-invasive bladder cancer, based on log2-scaled gene expression profile.
 # argument
-# item >> D >> A dataframe with log2-scaled gene expression profile. Each column is a sample gene expression profile (at least one is required), with one gene value by row. Rownames must be Entrez gene IDs. 
+# item >> D >> A dataframe with log2-scaled gene expression profile. Each column is a sample gene expression profile (at least one is required), with one gene value by row. Rownames must be Entrez gene IDs. Also accept a single named vector of expression values, with names referring to genes Entrez IDs. 
 # item >> minCor >> Correlation threshold between sample gene expression profile and consensus centroids profiles. A sample showing no correlation above this threshold will remain unclassifed (NA). 
 # item >> minDelta >> Threshold for the correlation difference between a sample profile and its two nearest centroids. A sample whose two highest correlations with centroids differ by less than this value will remain unclassified (NA).
 # item >> return.values >> If set to TRUE the function will return a data frame with detailed correlation values and metrics for each sample. Only resulting sample consensus labels are returned if set to FALSE (Default).
@@ -17,6 +17,9 @@
 getConsensusClass <- function(D, minCor = .2, minDelta = 0, return.values = F){
   
   data(centroids)
+  
+  if(is.vector(D)) D <- data.frame(ss = D, row.names = names(D))
+  
   gkeep <- intersect(rownames(centroids), rownames(D))
   if (length(gkeep) == 0) stop("empty intersection between profiled genes and the genes used for consensus classification. Make sure that rownames(D) are Entrez gene IDs")
   if (length(gkeep) < 0.5 * nrow(centroids)) warning("input gene expression profile(s) include less than half of the genes used for consensus classification. Results may not be relevant") 

@@ -13,4 +13,8 @@
 }
 \author{Aurelie Kamoun}
 \keyword{methods}
+\examples{
+data(tcgadat)
+getConsensusClass(tcga.dat)
+}
 \note{This is a contribution from the Tumor Identity Cards (CIT) program founded by the 'Ligue Nationale Contre le Cancer' (France): \url{http://cit.ligue-cancer.net}. For any question please contact \url{CITR@ligue-cancer.net}}
