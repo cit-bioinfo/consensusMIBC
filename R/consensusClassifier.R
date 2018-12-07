@@ -1,22 +1,7 @@
-# Rd
-# description >> Nearest-centroid single sample classifier according to the consensus molecular subtypes of muscle-invasive bladder cancer, based on log2-scaled gene expression profile.
-# argument
-# item >> D >> A dataframe with log2-scaled gene expression profile. Each column is a sample gene expression profile (at least one is required), with one gene value by row. Rownames must be Entrez gene IDs. Also accept a single named vector of expression values, with names referring to genes Entrez IDs. 
-# item >> minCor >> Correlation threshold between sample gene expression profile and consensus centroids profiles. A sample showing no correlation above this threshold will remain unclassifed (NA). 
-# item >> minDelta >> Threshold for the correlation difference between a sample profile and its two nearest centroids. A sample whose two highest correlations with centroids differ by less than this value will remain unclassified (NA).
-# item >> return.values >> If set to TRUE the function will return a data frame with detailed correlation values and metrics for each sample. Only resulting sample consensus labels are returned if set to FALSE (Default).
-# value >> If return.values is TRUE a dataframe is returned with correlation values for each samples (one sample by row). Pearson correlation values are given between each sample gene expression profile and each centroid. The predicted consensus labels are summarized in the consensusClass column and correspond to the nearestCentroid column when the minCor and minDelta conditions are verified.  
-# author >> Aurelie Kamoun
-# keyword >> methods
-# details >> ...
-# seealso >> ...
-# references >> ...
-# examples >> ...
-# end
-
-getConsensusClass <- function(D, minCor = .2, minDelta = 0, return.values = F){
+getConsensusClass <- function(D, minCor = .2){
   
   data(centroids)
+  data(minDelta)
   
   if(is.vector(D)) D <- data.frame(ss = D, row.names = names(D))
   
@@ -33,8 +18,13 @@ getConsensusClass <- function(D, minCor = .2, minDelta = 0, return.values = F){
   })
   
   cor.dat$consensusClass <- cor.dat$nearestCentroid
-  try(cor.dat[which(cor.dat$corToNearest < minCor | cor.dat$deltaSecondNearest < minDelta), "predicted"] <-  NA)
+  cor.dat$confidence <- c("High", "Medium")[match(cor.dat$deltaSecondNearest >= minDelta[cor.dat$nearestCentroid], c(TRUE, FALSE))]
+  cor.dat$confidence[which(cor.dat$deltaSecondNearest < mean(minDelta))]
   
-  if(return.values) return(cor.dat) else return(setNames(cor.dat$consensusClass, rownames(cor.dat))) 
+  try(cor.dat[which(cor.dat$corToNearest < minCor), "consensusClass"] <-  NA)
+  try(cor.dat[which(cor.dat$corToNearest < minCor), "confidence"] <-  NA)
+  
+  cor.dat <- cor.dat[, c("consensusClass" , "confidence" , colnames(centroids))]
+  return(cor.dat)
 }
 
