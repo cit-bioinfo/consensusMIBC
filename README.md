@@ -17,7 +17,7 @@ devtools::install_github("cit-bioinfo/consensusMIBC")
 library(consensusMIBC)
 ```
 ## Example
-The classifier expect either a single named vector of gene expression values or a dataframe formatted according to the example data sets provided (genes in row, samples in column). Gene names (vector names or dataframe rownames) must be Entrez IDs.
+The classifier expects either a single named vector of gene expression values or a dataframe formatted according to the example data sets provided (genes in row, samples in column). Gene names (vector names or dataframe rownames) must be Entrez IDs.
 
 ```{r}
 data(tcgadat)
