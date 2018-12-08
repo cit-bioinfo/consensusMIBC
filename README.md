@@ -1,5 +1,5 @@
 # consensusMIBC
-This package implements a nearest-centroid transcriptomic classifier that assigns class labels according to the consensus molecular classification of Muscle-Invasive Bladder Cancer (Manuscript submitted). The consensus classification identifies 6 molecular classes : Luminal Papillary (LumP), Luminal Non Specified (LumNS), Luminal Unstable (LumU), Stroma-rich, Basal/Squamous (Ba/Sq), Neuroendocrine-like (NE-like).
+This package implements a nearest-centroid transcriptomic classifier, that assigns class labels according to the consensus molecular classification of Muscle-Invasive Bladder Cancer (Manuscript submitted). The consensus classification identifies 6 molecular classes : Luminal Papillary (LumP), Luminal Non Specified (LumNS), Luminal Unstable (LumU), Stroma-rich, Basal/Squamous (Ba/Sq), Neuroendocrine-like (NE-like).  
 Two example data sets are provided to run the classifier.
 
 ## Citation
@@ -16,9 +16,16 @@ library(devtools)
 devtools::install_github("cit-bioinfo/consensusMIBC")
 library(consensusMIBC)
 ```
-## Example
-The classifier expects either a single named vector of gene expression values or a dataframe formatted according to the example data sets provided (genes in row, samples in column). Gene names (vector names or dataframe rownames) must be Entrez IDs.
 
+## Usage
+```{r}
+getConsensusClass(D, minCor = .2)
+```
+where `D` is either a single named vector of gene expression values or a dataframe formatted according to the example data sets provided (unique genes in row, samples in column). Gene names (vector names or dataframe rownames) must be Entrez IDs.
+
+and `minCor` is a confidence minimal threshold for best Pearson's correlation. Classifier predictions relying on a correlation lower than `minCor` are set to NA. Default is `0.2`.
+
+## Example
 ```{r}
 data(tcgadat)
 res <- getConsensusClass(tcga.dat)
@@ -38,3 +45,11 @@ table(res$consensusClass)
 ##      Ba/Sq       LumNS        LumP        LumU     NE-like Stroma-rich 
 ##        153          21         128          53           6          45 
 ```
+The classifier returns a dataframe with 7 columns :  
+
+`consensusClass` returns the consensus calls for each sample. Calls are set to NA for low confidence predictions (maximal correlation is below the given `minCor` parameter).  
+
+`confidence` returns a confidence level relatively to how strong a sample is more enriched in one consensus class as compared to the others. This confidence level is computed based on the per-consensus class distributions of correlations from the 1750 MIBC samples used in the study.  
+
+The 6 other columns return the Pearson's correlation between each sample and each consensus class.
+
