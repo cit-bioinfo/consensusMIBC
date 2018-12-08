@@ -1,10 +1,10 @@
 # consensusMIBC
-This package implements a nearest-centroid transcriptomic classifier that assigns class labels according to the consensus molecular classification of Muscle-Invasive Bladder Cancer (Manuscript in preparation). The consensus classification identifies 6 molecular classes : Luminal Papillary (LumP), Luminal Non Specified (LumNS), Luminal Unstable (LumU), Stroma-rich, Basal/Squamous (Ba/Sq), Neuroendocrine-like (NE-like).
+This package implements a nearest-centroid transcriptomic classifier that assigns class labels according to the consensus molecular classification of Muscle-Invasive Bladder Cancer (Manuscript submitted). The consensus classification identifies 6 molecular classes : Luminal Papillary (LumP), Luminal Non Specified (LumNS), Luminal Unstable (LumU), Stroma-rich, Basal/Squamous (Ba/Sq), Neuroendocrine-like (NE-like).
 Two example data sets are provided to run the classifier.
 
 ## Citation
-For now, please provide a link to this github repository:
-<https://github.com/cit-bioinfo/consensusMIBC>
+For now, you can refer to the following bioRxiv preprint:
+bioRxiv 488460; doi: https://doi.org/10.1101/488460
 
 ## Install
 You may install this package with [devtools]:
