@@ -18,8 +18,8 @@ getConsensusClass <- function(D, minCor = .2){
   })
   
   cor.dat$consensusClass <- cor.dat$nearestCentroid
-  cor.dat$confidence <- c("High", "Medium")[match(cor.dat$deltaSecondNearest >= minDelta[cor.dat$nearestCentroid], c(TRUE, FALSE))]
-  cor.dat$confidence[which(cor.dat$deltaSecondNearest < mean(minDelta))]
+  cor.dat$confidence <- c("High", "Medium")[match(cor.dat$deltaSecondNearest >= delta.cut[cor.dat$nearestCentroid], c(TRUE, FALSE))]
+  cor.dat$confidence[which(cor.dat$deltaSecondNearest < mean(delta.cut))]
   
   try(cor.dat[which(cor.dat$corToNearest < minCor), "consensusClass"] <-  NA)
   try(cor.dat[which(cor.dat$corToNearest < minCor), "confidence"] <-  NA)
