@@ -3,7 +3,7 @@ This package implements a nearest-centroid transcriptomic classifier that assign
 Two example data sets are provided to run the classifier.
 
 ## Citation
-For now, you can refer to the following bioRxiv preprint:
+For now, you can cite the following bioRxiv preprint: 
 bioRxiv 488460; doi: https://doi.org/10.1101/488460
 
 ## Install
