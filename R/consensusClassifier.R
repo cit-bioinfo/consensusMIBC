@@ -1,30 +1,33 @@
-getConsensusClass <- function(D, minCor = .2){
+getConsensusClass <- function(x, minCor = .2){
   
   data(centroids)
-  data(minDelta)
   
-  if(is.vector(D)) D <- data.frame(ss = D, row.names = names(D))
+  if(is.vector(x)) x <- data.frame(ss = x, row.names = names(x))
   
-  gkeep <- intersect(rownames(centroids), rownames(D))
+  gkeep <- intersect(rownames(centroids), rownames(x))
   if (length(gkeep) == 0) stop("empty intersection between profiled genes and the genes used for consensus classification. Make sure that rownames(D) are Entrez gene IDs")
   if (length(gkeep) < 0.5 * nrow(centroids)) warning("input gene expression profile(s) include less than half of the genes used for consensus classification. Results may not be relevant") 
-  cor.dat <- as.data.frame(cor(D[gkeep, ], centroids[gkeep, ], use = "complete.obs"))
-  
-  cor.dat$nearestCentroid <- apply(cor.dat, 1, function(x){colnames(centroids)[which.max(x)]})
+  cor.dat <- as.data.frame(cor(x[gkeep, ], centroids[gkeep, ], use = "complete.obs"), row.names = colnames(x))
+
+  # Best correlated centroid
+  cor.dat$nearestCentroid <- apply(cor.dat, 1, function(y){colnames(centroids)[which.max(y)]})
   cor.dat$corToNearest <- apply(cor.dat[, colnames(centroids)], 1, max)
-  cor.dat$deltaSecondNearest <- sapply(1:nrow(cor.dat), function(i){
-    w <- setdiff(colnames(centroids), cor.dat[i, "nearestCentroid"])
-    cor.dat[i, "corToNearest"] - max(cor.dat[i, w])
-  })
+  cor.dat$adjusted_pval <- ncol(centroids) * sapply(colnames(x), function(smp){
+    cor.test(x[gkeep, smp], centroids[gkeep, cor.dat[smp, "nearestCentroid"]])$p.value
+    })
+
+  # Separation level metrics
+  cor.dat$deltaSecondNearest <- apply(cor.dat$corToNearest - cor.dat[, colnames(centroids)], 1, function(x){sort(x)[2]})
+  cor.dat$deltaMed <- apply(cor.dat$corToNearest - cor.dat[, colnames(centroids)], 1, median)
+  cor.dat$separationLevel <- cor.dat$deltaSecondNearest/cor.dat$deltaMed
   
   cor.dat$consensusClass <- cor.dat$nearestCentroid
-  cor.dat$confidence <- c("High", "Medium")[match(cor.dat$deltaSecondNearest >= delta.cut[cor.dat$nearestCentroid], c(TRUE, FALSE))]
-  cor.dat$confidence[which(cor.dat$deltaSecondNearest < mean(delta.cut))]
   
+  # Set to NA if best correlation < minCor
   try(cor.dat[which(cor.dat$corToNearest < minCor), "consensusClass"] <-  NA)
-  try(cor.dat[which(cor.dat$corToNearest < minCor), "confidence"] <-  NA)
+  try(cor.dat[which(cor.dat$corToNearest < minCor), "separationLevel"] <-  NA)
   
-  cor.dat <- cor.dat[, c("consensusClass" , "confidence" , colnames(centroids))]
+  cor.dat <- cor.dat[, c("consensusClass" , "adjusted_pval", "separationLevel", colnames(centroids))]
   return(cor.dat)
 }
 
