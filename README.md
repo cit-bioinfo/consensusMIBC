@@ -60,7 +60,7 @@ The classifier returns a dataframe with 9 columns :
 
 `adjusted_pval` returns the Bonferroni corrected (n=6) p-value(s) associated to the Pearson's correlation of the sample(s) with the nearest centroid.  
 
-`separationLevel` gives a measure of how a sample is representative of its consensus class. It ranges from 0 to 1, with 0 meaning the sample is too close to other consensus classes to be confident in its assigned consensus class label, and 1 meaning the sample is very representative of its consensus class and very different from the other consensus classes. The separationLevel is measured as follows : (correlation to nearest centroid - correlation to second nearest centroid) / median difference of sample-to-centroid correlation.  
+`separationLevel` gives a measure of how a sample is representative of its consensus class. It ranges from 0 to 1, with 0 meaning the sample is too close to other consensus classes to be confidently assigned one consensus class label, and 1 meaning the sample is highly representative of its consensus class and well separated from the other consensus classes. The separationLevel is measured as follows : (correlation to nearest centroid - correlation to second nearest centroid) / median difference of sample-to-centroid correlation.  
 
 The 6 other columns return the Pearson's correlation between each sample and each consensus class.
 
