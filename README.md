@@ -30,13 +30,17 @@ and `minCor` is a confidence minimal threshold for best Pearson's correlation. C
 data(tcgadat)
 
 # Single sample classification
+
 getConsensusClass(tcga.dat[, 1])
+
 #   consensusClass adjusted_pval separationLevel      LumP     LumNS      LumU Stroma-rich    Ba/Sq   NE-like
 #ss           LumP  1.698954e-90       0.6626931 0.6176298 0.5735781 0.5641684    0.589056 0.575446 0.1820276
 
 # Classification of a matrix of samples
+
 res <- getConsensusClass(tcga.dat)
 head(res)
+
 #                 consensusClass adjusted_pval separationLevel      LumP     LumNS      LumU Stroma-rich     Ba/Sq   NE-like
 #TCGA-2F-A9KO-01A           LumP  1.698954e-90       0.6626931 0.6176298 0.5735781 0.5641684   0.5890560 0.5754460 0.1820276
 #TCGA-2F-A9KP-01A           LumP 8.546007e-142       0.3213549 0.7284300 0.6806556 0.6938315   0.5608757 0.4695459 0.2734213
