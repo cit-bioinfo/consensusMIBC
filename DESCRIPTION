@@ -1,7 +1,6 @@
 Package: consensusMIBC
 Title:  Transcriptomic predictor of muscle-invasive bladder cancer consensus subtypes
 Version: 1.0
-Authors@R: c(person("Aurelie", "Kamoun", email = "aurelie.kamoun@ligue-cancer.net", role = c("aut", "cre")), person("Gordon", "Robertson", email = "grobertson@bcgsc.ca", role = c("ctb")) 
 Author: Aurelie Kamoun [aut, cre],
     Gordon Robertson [ctb] 
 Maintainer: Aurelie Kamoun <aurelie.kamoun@ligue-cancer.net>
