@@ -1,1 +1,2 @@
-export(getConsensusClass)
+export(getConsensusClass, plotCorrelations)
+importFrom(fmsb, radarchart)
