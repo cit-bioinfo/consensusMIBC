@@ -1,2 +1,5 @@
 export(getConsensusClass, plotCorrelations)
 importFrom(fmsb, radarchart)
+importFrom("graphics", "layout", "mtext")
+importFrom("stats", "cor", "cor.test", "median", "setNames")
+importFrom("utils", "data")
