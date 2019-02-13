@@ -21,7 +21,7 @@ library(consensusMIBC)
 ```{r}
 getConsensusClass(x, minCor = .2, gene_id = c("entrezgene", "ensembl_gene_id", "hgnc_symbol")[1])
 ```
-Where `x` is either a single named vector of gene expression values or a dataframe formatted according to the example data sets provided (unique genes in row, samples in column). Gene names (vector names or dataframe rownames) may be supplied as Entrez IDs, Ensembl gene IDs, or HUGO gene symbols. RNA-seq data needs to be log-transformed.  
+Where `x` is either a single named vector of gene expression values or a dataframe formatted according to the example data sets provided (unique genes in row, samples in column). Gene names (vector names or dataframe rownames) may be supplied as Entrez IDs, Ensembl gene IDs, or HUGO gene symbols. RNA-seq data needs to be log-transformed, for example using log2(normalized counts + 1).  
 
 `minCor` is a numeric value specifying a confidence minimal threshold for best Pearson's correlation. Classifier predictions relying on a correlation lower than `minCor` are set to NA. Default is `0.2`.  
 
