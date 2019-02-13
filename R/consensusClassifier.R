@@ -3,7 +3,7 @@ getConsensusClass <- function(x, minCor = .2, gene_id = c("entrezgene", "ensembl
   data(centroids)
   lev.cs <- c("LumP", "LumNS", "LumU", "Stroma-rich", "Ba/Sq", "NE-like")
   
-  if(is.vector(x)) 
+  if(is.vector(x)) {
     if(is.null(names(x))) stop("Input vector of gene expression is missing names.\n The names must be the type of gene identifiers specified by the gene_id argument.")
     x <- data.frame(ss = x, row.names = names(x))
   }
