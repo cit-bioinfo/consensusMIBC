@@ -9,7 +9,7 @@ getConsensusClass <- function(x, minCor = .2, gene_id = c("entrezgene", "ensembl
   }
   
   gkeep <- intersect(centroids[, gene_id], rownames(x))
-  if (length(gkeep) == 0) stop("Empty intersection between profiled genes and the genes used for consensus classification.\n Make sure that rownames(D) correspond to the type of identifiers specified by the gene_id argument")
+  if (length(gkeep) == 0) stop("Empty intersection between profiled genes and the genes used for consensus classification.\n Make sure that gene names correspond to the type of identifiers specified by the gene_id argument")
   if (length(gkeep) < 0.5 * nrow(centroids)) warning("Input gene expression profile(s) include(s) less than half of the genes used for consensus classification. Results may not be relevant") 
   cor.dat <- as.data.frame(cor(x[gkeep, ], centroids[match(gkeep, centroids[, gene_id]), lev.cs], use = "complete.obs"), row.names = colnames(x))
 
