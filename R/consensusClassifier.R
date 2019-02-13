@@ -3,17 +3,20 @@ getConsensusClass <- function(x, minCor = .2, gene_id = c("entrezgene", "ensembl
   data(centroids)
   lev.cs <- c("LumP", "LumNS", "LumU", "Stroma-rich", "Ba/Sq", "NE-like")
   
-  if(is.vector(x)) x <- data.frame(ss = x, row.names = names(x))
+  if(is.vector(x)) 
+    if(is.null(names(x))) stop("Input vector of gene expression is missing names.\n The names must be the type of gene identifiers specified by the gene_id argument.")
+    x <- data.frame(ss = x, row.names = names(x))
+  }
   
   gkeep <- intersect(centroids[, gene_id], rownames(x))
-  if (length(gkeep) == 0) stop("empty intersection between profiled genes and the genes used for consensus classification. Make sure that rownames(D) are Entrez gene IDs")
-  if (length(gkeep) < 0.5 * nrow(centroids)) warning("input gene expression profile(s) include(s) less than half of the genes used for consensus classification. Results may not be relevant") 
+  if (length(gkeep) == 0) stop("Empty intersection between profiled genes and the genes used for consensus classification.\n Make sure that rownames(D) correspond to the type of identifiers specified by the gene_id argument")
+  if (length(gkeep) < 0.5 * nrow(centroids)) warning("Input gene expression profile(s) include(s) less than half of the genes used for consensus classification. Results may not be relevant") 
   cor.dat <- as.data.frame(cor(x[gkeep, ], centroids[match(gkeep, centroids[, gene_id]), lev.cs], use = "complete.obs"), row.names = colnames(x))
 
   # Best correlated centroid
   cor.dat$nearestCentroid <- apply(cor.dat, 1, function(y){lev.cs[which.max(y)]})
   cor.dat$corToNearest <- apply(cor.dat[, lev.cs], 1, max)
-  cor.dat$adjusted_pval <- length(lev.cs) * sapply(colnames(x), function(smp){
+  cor.dat$cor_pval <- sapply(colnames(x), function(smp){
     cor.test(x[gkeep, smp], centroids[match(gkeep, centroids[, gene_id]), cor.dat[smp, "nearestCentroid"]])$p.value
     })
 
@@ -28,7 +31,7 @@ getConsensusClass <- function(x, minCor = .2, gene_id = c("entrezgene", "ensembl
   try(cor.dat[which(cor.dat$corToNearest < minCor), "consensusClass"] <-  NA)
   try(cor.dat[which(cor.dat$corToNearest < minCor), "separationLevel"] <-  NA)
   
-  cor.dat <- cor.dat[, c("consensusClass" , "adjusted_pval", "separationLevel", lev.cs)]
+  cor.dat <- cor.dat[, c("consensusClass" , "cor_pval", "separationLevel", lev.cs)]
   return(cor.dat)
 }
 
