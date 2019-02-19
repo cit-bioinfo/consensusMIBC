@@ -43,7 +43,7 @@ getConsensusClass(tcga.dat[, 1])
 res <- getConsensusClass(tcga.dat)
 head(res)
 
-#                 consensusClass adjusted_pval separationLevel      LumP     LumNS      LumU Stroma-rich     Ba/Sq   NE-like
+#                 consensusClass      cor_pval separationLevel      LumP     LumNS      LumU Stroma-rich     Ba/Sq   NE-like
 #TCGA-2F-A9KO-01A           LumP  1.698954e-90       0.6626931 0.6176298 0.5735781 0.5641684   0.5890560 0.5754460 0.1820276
 #TCGA-2F-A9KP-01A           LumP 8.546007e-142       0.3213549 0.7284300 0.6806556 0.6938315   0.5608757 0.4695459 0.2734213
 #TCGA-2F-A9KQ-01A           LumP 8.031287e-137       0.5460606 0.7196396 0.6443850 0.6345979   0.5290542 0.4500750 0.2041000
@@ -60,7 +60,7 @@ The classifier returns a dataframe with 9 columns :
 
 `consensusClass` returns the consensus calls for each sample. Calls are set to NA for low confidence predictions (maximal correlation is below the given `minCor` parameter).  
 
-`adjusted_pval` returns the Bonferroni corrected (n=6) p-value(s) associated to the Pearson's correlation of the sample(s) with the nearest centroid.  
+`cor_pval` returns the p-value(s) associated to the Pearson's correlation of the sample(s) with the nearest centroid.  
 
 `separationLevel` gives a measure of how a sample is representative of its consensus class. It ranges from 0 to 1, with 0 meaning the sample is too close to other consensus classes to be confidently assigned one consensus class label, and 1 meaning the sample is highly representative of its consensus class and well separated from the other consensus classes. The separationLevel is measured as follows : (correlation to nearest centroid - correlation to second nearest centroid) / median difference of sample-to-centroid correlation.  
 
