@@ -1,0 +1,77 @@
+---
+title: "consensusMIBC - A consensus classifier of Muscle-Invasive Bladder Cancer Samples"
+output: 
+    html_document:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{consensusMIBC}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+# Overview
+This package implements a nearest-centroid transcriptomic classifier, that assigns class labels according to the consensus molecular classification of Muscle-Invasive Bladder Cancer (Manuscript submitted). The consensus classification identifies 6 molecular classes : Luminal Papillary (LumP), Luminal Non Specified (LumNS), Luminal Unstable (LumU), Stroma-rich, Basal/Squamous (Ba/Sq), Neuroendocrine-like (NE-like).  
+Two example data sets are provided to run the classifier.
+
+## Citation
+For now, you can cite the following bioRxiv preprint: 
+bioRxiv 488460; doi: https://doi.org/10.1101/488460
+
+# Usage
+
+To run the consensus classification for the TCGA-BLCA cohort, we can simply load the gene expression data from the cohort included in this package with `data("tcgadat)`, then run the `getConsensusClass` function.
+
+```{r message=FALSE}
+#-- Get TCGA data
+library(consensusMIBC)
+data("tcgadat")
+
+#-- Classify samples
+sample_classes <- getConsensusClass(tcga.dat, minCor = .2, gene_id = "entrezgene")
+```
+
+The `tcga.dat` can be replaced by a single named vector of gene expression values or a dataframe formatted according to the example data sets provided (unique genes in row, samples in column). Gene names (vector names or dataframe rownames) may be supplied as Entrez IDs, Ensembl gene IDs, or HUGO gene symbols. RNA-seq data needs to be log-transformed, for example using log2(normalized counts + 1). \n
+
+Other parameters that can influence the classifier are:\n
+
+* `minCor` is a numeric value specifying a confidence minimal threshold for best Pearson's correlation. Classifier predictions relying on a correlation lower than `minCor` are set to NA. Default is `0.2`.
+* `gene_id` is a character value specifying the type of gene identifiers used for the names/rownames of x : `entrezgene` for Entrez IDs, `ensembl_gene_id` for Ensembl gene IDs, or `hgnc_symbol` for HUGO gene symbols. Default value is `entrezgene`.  
+
+
+# Results
+
+```{r eval=FALSE}
+head(sample_classes)
+```
+
+```{r echo=FALSE, message=FALSE}
+dt <- head(sample_classes)
+dt$cor_pval <- ifelse(dt$cor_pval < 0.001, "< 0.001", dt$cor_pval)
+kableExtra::kable_styling(knitr::kable(dt, digits = 3, format = "html"))
+```
+
+The return value of the `getConsensusClass` function consists of a `data.frame` with 9 columns (variables):
+
+1. `consensusClass` returns the consensus calls for each sample. Calls are set to NA for low confidence predictions (maximal correlation is below the given `minCor` parameter).
+2. `cor_pval` returns the p-value(s) associated to the Pearson's correlation of the sample(s) with the nearest centroid. 
+3. `separationLevel` gives a measure of how a sample is representative of its consensus class. It ranges from 0 to 1, with 0 meaning the sample is too close to other consensus classes to be confidently assigned one consensus class label, and 1 meaning the sample is highly representative of its consensus class and well separated from the other consensus classes. The separationLevel is measured as follows : (correlation to nearest centroid - correlation to second nearest centroid) / median difference of sample-to-centroid correlation. 
+
+The 6 other columns return the Pearson's correlation between each sample and each consensus class.
+
+# Visualization
+
+For visualization of the classification results, we also provide the `plotCorrelations` function, based on the `fmsb::radarchart` function.
+
+## For a single-sample
+```{r fig.width=4, fig.height=4}
+plotCorrelations(sample_classes[1,])
+```
+
+For a single sample, the `plotCorrelations` function will generate a single radar plot with the class separation. We can see that this TCGA sample was classified as Luminal-papillary (LumP), with a high separation level.
+
+## For a cohort
+
+```{r fig.width=8, fig.height=8}
+plotCorrelations(sample_classes)
+```
+
+When `plotCorrelations` is used for a cohort, it generates a panel of six radarcharts, one for each consensus class. They summarize the main statistics given in the results table for each class. In this case, we see that, in the TCGA cohort, the NE-like and Basal-like classes have the highest median separation levels, while the LumNS and LumU both have low separation levels, possibly due to the other Luminal groups.
