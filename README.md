@@ -13,8 +13,16 @@ You may install this package with [devtools]:
 
 ```{r}
 library(devtools)
-devtools::install_github("cit-bioinfo/consensusMIBC")
+devtools::install_github("cit-bioinfo/consensusMIBC", build_vignettes = TRUE)
 library(consensusMIBC)
+```
+
+## Long-form documentation
+
+To see example results for the consensusMIBC package, use the package vignette:
+
+```{r}
+vignette("consensusMIBC")
 ```
 
 ## Usage
