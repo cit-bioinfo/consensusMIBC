@@ -86,7 +86,7 @@ plotCorrelations <- function(xres, col.samp = "#1414BE", col.med = "red",
                  #pcol = c(rep(rgb(20, 20, 190, alpha = alpha , maxColorValue = 255), nrow(df) - 3), "red"),
                  cglty = cglty, cglwd = cglwd, cglcol = cglcol, 
                  centerzero = centerzero, ...)
-      mtext(paste(cln, " predictions (n=", nrow(xres), ")", sep = ""), side = 3, line = 1)
+      mtext(paste(cln, " predictions (n=", nrow(df), ")", sep = ""), side = 3, line = 1)
       mtext(paste("Separation Level (Median): ", round(med.sep, 2) , sep = ""), side = 1, line = 1, cex = .8)
     }
   }
